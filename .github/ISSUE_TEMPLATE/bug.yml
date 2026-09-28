@@ -1,0 +1,29 @@
+name: Bug
+description: Something retrieved the wrong tables or crashed
+labels: [bug]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: The natural-language question you sent.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected tables / joins
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual plan
+      description: Paste `joinpath --json` output.
+    validations:
+      required: true
+  - type: textarea
+    id: schema
+    attributes:
+      label: Schema excerpt
+      description: Tables, aliases, and foreign_keys involved. Redact secrets.

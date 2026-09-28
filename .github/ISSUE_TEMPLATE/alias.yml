@@ -1,0 +1,23 @@
+name: Alias / schema example
+description: A real business term that should map to a column
+labels: [aliases]
+body:
+  - type: input
+    id: term
+    attributes:
+      label: Business term
+      placeholder: 成交额
+    validations:
+      required: true
+  - type: input
+    id: column
+    attributes:
+      label: Physical column
+      placeholder: orders.gmv_amt
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Why this mapping exists
+      placeholder: Finance books revenue on booked_at, not created_at.

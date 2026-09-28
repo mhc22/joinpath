@@ -16,6 +16,7 @@ class ColumnHint:
     matched: str
     aliases: list[str] = field(default_factory=list)
     description: str = ""
+    type: str = ""
 
 
 @dataclass
@@ -45,9 +46,17 @@ class JoinPlan:
         for table in self.tables:
             hints = by_table.get(table) or []
             if hints:
-                cols = ", ".join(f"{h.column}({h.matched})" if h.matched else h.column for h in hints)
+                parts = []
+                for h in hints:
+                    piece = h.column
+                    if h.type:
+                        piece += f":{h.type}"
+                    if h.matched:
+                        piece += f"={h.matched}"
+                    parts.append(piece)
+                cols = ", ".join(parts)
             else:
-                cols = "*"
+                cols = "(use listed joins only; no column hint)"
             lines.append(f"  - {table}: {cols}")
         if self.joins:
             lines.append("joins:")
@@ -129,6 +138,7 @@ def _collect_columns(schema: Schema, hits: list[Hit], tables: list[str]) -> list
                     matched=matched,
                     aliases=list(col.aliases) if col else [],
                     description=col.description if col else "",
+                    type=col.type if col else "",
                 )
             )
     out.sort(key=lambda c: c.score, reverse=True)

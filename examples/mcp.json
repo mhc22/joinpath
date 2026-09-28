@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "joinpath": {
+      "command": "python",
+      "args": ["-m", "joinpath.mcp"]
+    }
+  }
+}
