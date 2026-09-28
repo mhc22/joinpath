@@ -1,0 +1,80 @@
+{
+  "dialect": "postgres",
+  "tables": [
+    {
+      "name": "customers",
+      "aliases": ["客户", "会员", "用户"],
+      "description": "Customer dimension. tier stores membership level.",
+      "columns": [
+        {"name": "id", "type": "bigint"},
+        {"name": "name", "type": "text", "aliases": ["姓名", "名称"]},
+        {
+          "name": "tier",
+          "type": "text",
+          "aliases": ["等级", "会员等级", "黄金", "黄金会员", "gold"],
+          "description": "Membership tier: gold / silver / standard"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "aliases": ["订单", "成交"],
+      "description": "Order fact. Revenue recognition uses booked_at.",
+      "columns": [
+        {"name": "id", "type": "bigint"},
+        {"name": "customer_id", "type": "bigint"},
+        {
+          "name": "gmv_amt",
+          "type": "numeric",
+          "aliases": ["成交额", "GMV", "销售额", "金额"],
+          "description": "GMV in CNY, tax excluded"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "aliases": ["下单时间", "创建时间"]
+        },
+        {
+          "name": "booked_at",
+          "type": "timestamptz",
+          "aliases": ["成交时间", "入账时间", "今年"],
+          "description": "Revenue recognition timestamp"
+        }
+      ]
+    },
+    {
+      "name": "order_items",
+      "aliases": ["订单明细", "明细"],
+      "columns": [
+        {"name": "id", "type": "bigint"},
+        {"name": "order_id", "type": "bigint"},
+        {"name": "sku_id", "type": "bigint"},
+        {"name": "qty", "type": "int", "aliases": ["数量", "销量"]},
+        {"name": "amount", "type": "numeric", "aliases": ["明细金额"]}
+      ]
+    },
+    {
+      "name": "skus",
+      "aliases": ["商品", "SKU"],
+      "columns": [
+        {"name": "id", "type": "bigint"},
+        {"name": "name", "type": "text", "aliases": ["商品名"]},
+        {"name": "category", "type": "text", "aliases": ["类目", "品类"]}
+      ]
+    },
+    {
+      "name": "employees",
+      "aliases": ["员工", "销售"],
+      "columns": [
+        {"name": "id", "type": "bigint"},
+        {"name": "name", "type": "text"},
+        {"name": "region", "type": "text", "aliases": ["大区"]}
+      ]
+    }
+  ],
+  "foreign_keys": [
+    {"from": "orders.customer_id", "to": "customers.id"},
+    {"from": "order_items.order_id", "to": "orders.id"},
+    {"from": "order_items.sku_id", "to": "skus.id"}
+  ]
+}
